@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}카테고리 - 원♡순 가계부{% endblock %}
+{% block content %}
+<div class="page-title">⚙️ 카테고리 관리</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:800px">
+  <!-- 현재 카테고리 -->
+  <div class="table-card">
+    <table>
+      <thead><tr><th>코드</th><th>카테고리명</th></tr></thead>
+      <tbody>
+        {% for cat in cats %}
+        <tr><td>{{ cat.code }}</td><td>{{ cat.name }}</td></tr>
+        {% else %}
+        <tr><td colspan="2" style="text-align:center;color:#94a3b8;padding:24px">카테고리 없음</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 추가 폼 -->
+  <div class="form-card">
+    <div style="font-size:16px;font-weight:600;margin-bottom:20px">카테고리 추가</div>
+    <form method="POST">
+      <div class="form-group" style="margin-bottom:14px">
+        <label>코드 (예: 022)</label>
+        <input type="text" name="code" placeholder="022" required>
+      </div>
+      <div class="form-group" style="margin-bottom:20px">
+        <label>카테고리명 (예: 외식)</label>
+        <input type="text" name="name" placeholder="외식" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-submit">추가</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

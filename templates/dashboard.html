@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block title %}대시보드 - 원♡순 가계부{% endblock %}
+{% block content %}
+
+<!-- 필터 -->
+<div class="filter-bar">
+  <form method="GET" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <select name="year" onchange="this.form.submit()">
+      {% for y in years %}<option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}년</option>{% endfor %}
+    </select>
+    <select name="month" onchange="this.form.submit()">
+      {% for m in range(1,13) %}<option value="{{ m }}" {% if m == month %}selected{% endif %}>{{ m }}월</option>{% endfor %}
+    </select>
+  </form>
+  <a href="{{ url_for('add_transaction') }}" class="btn btn-primary" style="margin-left:auto">+ 거래 입력</a>
+</div>
+
+<!-- 요약 카드 -->
+<div class="summary-grid">
+  <div class="summary-card income">
+    <label>총 수입</label>
+    <div class="amount">+{{ "{:,.0f}".format(total_income) }}원</div>
+  </div>
+  <div class="summary-card expense">
+    <label>총 지출 (현금)</label>
+    <div class="amount">-{{ "{:,.0f}".format(total_expense) }}원</div>
+  </div>
+  <div class="summary-card balance">
+    <label>월 잔액</label>
+    <div class="amount" style="color:{{ '#10b981' if balance >= 0 else '#ef4444' }}">
+      {{ '+' if balance >= 0 else '' }}{{ "{:,.0f}".format(balance) }}원
+    </div>
+  </div>
+  <div class="summary-card total">
+    <label>전체 잔액</label>
+    <div class="amount" style="color:{{ '#8b5cf6' if total_balance >= 0 else '#ef4444' }}">
+      {{ '+' if total_balance >= 0 else '' }}{{ "{:,.0f}".format(total_balance) }}원
+    </div>
+  </div>
+  <div class="summary-card card">
+    <label>💳 카드 지출</label>
+    <div class="amount">-{{ "{:,.0f}".format(card_expense) }}원</div>
+  </div>
+</div>
+
+<!-- 차트 -->
+<div class="charts-grid">
+  <div class="chart-card">
+    <h3>카테고리별 지출 (현금)</h3>
+    <canvas id="catChart" height="220"></canvas>
+  </div>
+  <div class="chart-card">
+    <h3>일별 수입 / 지출</h3>
+    <canvas id="dailyChart" height="220"></canvas>
+  </div>
+</div>
+
+<!-- 최근 거래 -->
+<div class="table-card">
+  <table>
+    <thead>
+      <tr>
+        <th>날짜</th><th>카테고리</th><th>내용</th>
+        <th style="text-align:right">수입</th>
+        <th style="text-align:right">지출</th>
+        <th>결제</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td>{{ r.date }}</td>
+        <td>{{ r.category }}</td>
+        <td>{{ r.description }}</td>
+        <td style="text-align:right" class="text-income">{% if r.income > 0 %}+{{ "{:,.0f}".format(r.income) }}{% endif %}</td>
+        <td style="text-align:right" class="text-expense">{% if r.expense > 0 %}-{{ "{:,.0f}".format(r.expense) }}{% endif %}</td>
+        <td><span class="badge {{ 'badge-card' if r.credit == 1 else 'badge-cash' }}">{{ '💳 카드' if r.credit == 1 else '💵 현금' }}</span></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:32px">이번 달 거래 내역이 없습니다.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+const catData   = {{ cat_data | tojson }};
+const dailyData = {{ daily_data | tojson }};
+
+// 카테고리 파이차트
+if (catData.length > 0) {
+  new Chart(document.getElementById('catChart'), {
+    type: 'doughnut',
+    data: {
+      labels: catData.map(d => d.category),
+      datasets: [{ data: catData.map(d => d.total),
+        backgroundColor: ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#3b82f6','#14b8a6','#f97316','#ec4899','#84cc16'] }]
+    },
+    options: { plugins: { legend: { position: 'right' } }, cutout: '55%',
+      plugins: { tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed.toLocaleString('ko-KR')}원` } } }
+    }
+  });
+}
+
+// 일별 막대차트
+if (dailyData.length > 0) {
+  new Chart(document.getElementById('dailyChart'), {
+    type: 'bar',
+    data: {
+      labels: dailyData.map(d => d.date.slice(5)),
+      datasets: [
+        { label: '수입', data: dailyData.map(d => d.income),  backgroundColor: '#10b981' },
+        { label: '지출', data: dailyData.map(d => d.expense), backgroundColor: '#ef4444' }
+      ]
+    },
+    options: {
+      scales: { y: { ticks: { callback: v => v.toLocaleString('ko-KR') } } },
+      plugins: { tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString('ko-KR')}원` } } }
+    }
+  });
+}
+</script>
+{% endblock %}
