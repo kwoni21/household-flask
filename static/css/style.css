@@ -146,8 +146,8 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
 .chart-card { background: var(--surface); border-radius: var(--radius); padding: 16px 20px; box-shadow: var(--shadow); }
 .chart-card h3 { font-size: 13px; font-weight: 600; color: var(--text-sub); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.4px; }
-.chart-wrap { position: relative; height: 220px; }
-.chart-wrap canvas { max-height: 220px; }
+.chart-wrap { position: relative; height: 220px; overflow: hidden; }
+.chart-wrap canvas { max-height: 220px !important; max-width: 100% !important; }
 
 /* ── 반응형 (태블릿: 900px 이하) ── */
 @media (max-width: 900px) {
