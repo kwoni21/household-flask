@@ -59,8 +59,8 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .summary-card.balance { border-top-color: var(--primary); }
 .summary-card.total   { border-top-color: #8b5cf6; }
 .summary-card.card    { border-top-color: var(--card); }
-.summary-card label   { font-size: 12px; color: var(--text-sub); display: block; margin-bottom: 6px; }
-.summary-card .amount { font-size: 20px; font-weight: 700; }
+.summary-card label   { font-size: 12px; color: var(--text-sub); display: block; margin-bottom: 6px; text-align: center; }
+.summary-card .amount { font-size: 20px; font-weight: 700; text-align: center; display: block; }
 .summary-card.income  .amount { color: var(--income); }
 .summary-card.expense .amount { color: var(--expense); }
 .summary-card.balance .amount { color: var(--primary); }
@@ -90,7 +90,7 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .table-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
 .table-card table { width: 100%; border-collapse: collapse; }
 .table-card th { background: #f8fafc; padding: 12px 16px; font-size: 13px; color: var(--text-sub); font-weight: 500; text-align: left; border-bottom: 1px solid var(--border); }
-.table-card td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #f1f5f9; }
+.table-card td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
 .table-card tr:last-child td { border-bottom: none; }
 .table-card tr:hover td { background: #f8fafc; }
 .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 12px; }
@@ -128,8 +128,16 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .login-sub   { font-size: 14px; color: var(--text-sub); text-align: center; margin-bottom: 32px; }
 .login-card .form-group { margin-bottom: 16px; }
 .login-card input { width: 100%; }
-.remember-row { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 14px; color: var(--text-sub); }
-.remember-row input { accent-color: var(--primary); }
+.remember-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px; padding: 10px 14px;
+  background: #f8fafc; border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.remember-row input[type=checkbox] {
+  width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0;
+}
+.remember-row label { font-size: 14px; color: var(--text); cursor: pointer; font-weight: 500; }
 .btn-login { width: 100%; padding: 13px; font-size: 16px; font-weight: 600; background: var(--primary); color: #fff; border: none; border-radius: 10px; cursor: pointer; transition: background 0.2s; }
 .btn-login:hover { background: var(--primary-dark); }
 
