@@ -231,6 +231,45 @@ def delete_transaction(tx_id):
     conn.commit(); cur.close(); conn.close()
     return redirect(request.referrer or url_for('transactions'))
 
+# ── 거래 수정 ────────────────────────────────────────────────
+@app.route('/edit/<int:tx_id>', methods=['GET', 'POST'])
+@login_required
+def edit_transaction(tx_id):
+    conn = get_conn(); cur = conn.cursor()
+    cur.execute("SELECT code, name FROM categories ORDER BY code")
+    cats = cur.fetchall()
+
+    if request.method == 'POST':
+        tx_date     = request.form.get('date')
+        cat_code    = request.form.get('cat_code')
+        description = request.form.get('description', '').strip()
+        income      = float(request.form.get('income', '0').replace(',', '') or 0)
+        expense     = float(request.form.get('expense', '0').replace(',', '') or 0)
+        credit      = 1 if request.form.get('credit') else 0
+
+        if income == 0 and expense == 0:
+            cur.execute("SELECT * FROM transactions WHERE id=%s", (tx_id,))
+            tx = cur.fetchone()
+            return render_template('edit.html', cats=cats, tx=tx, userid=session['userid'], error="수입 또는 지출 금액을 입력하세요.")
+        if not description:
+            cur.execute("SELECT * FROM transactions WHERE id=%s", (tx_id,))
+            tx = cur.fetchone()
+            return render_template('edit.html', cats=cats, tx=tx, userid=session['userid'], error="내용을 입력하세요.")
+
+        cur.execute(
+            "UPDATE transactions SET date=%s, cat_code=%s, description=%s, income=%s, expense=%s, credit=%s WHERE id=%s",
+            (tx_date, cat_code, description, income, expense, credit, tx_id)
+        )
+        conn.commit(); cur.close(); conn.close()
+        return redirect(url_for('transactions'))
+
+    cur.execute("SELECT * FROM transactions WHERE id=%s", (tx_id,))
+    tx = cur.fetchone()
+    cur.close(); conn.close()
+    if not tx:
+        return redirect(url_for('transactions'))
+    return render_template('edit.html', cats=cats, tx=tx, userid=session['userid'], error=None)
+
 # ── 카테고리 관리 ────────────────────────────────────────────
 @app.route('/categories', methods=['GET', 'POST'])
 @login_required
