@@ -60,6 +60,11 @@
 </div>
 
 <!-- 최근 거래 -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+  <span style="font-size:14px;font-weight:600;color:var(--text-sub)">최근 거래 ({{ rows|length }}건 / 해당 월 전체 중)</span>
+  <a href="{{ url_for('transactions', year=year, month=month) }}"
+     style="font-size:13px;color:var(--primary);text-decoration:none;font-weight:500">전체 보기 →</a>
+</div>
 <div class="table-card">
   <div class="table-scroll">
   <table>
