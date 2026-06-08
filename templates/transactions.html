@@ -23,6 +23,28 @@
   <span style="margin-left:auto;font-size:14px;color:#64748b">{{ rows|length }}건</span>
 </div>
 
+<!-- 합계 카드 -->
+<div class="summary-grid" style="margin-bottom:16px">
+  <div class="summary-card income">
+    <label>수입 합계</label>
+    <div class="amount">+{{ "{:,.0f}".format(total_income) }}원</div>
+  </div>
+  <div class="summary-card expense">
+    <label>지출 합계 (현금)</label>
+    <div class="amount">-{{ "{:,.0f}".format(total_expense) }}원</div>
+  </div>
+  <div class="summary-card balance">
+    <label>잔액</label>
+    <div class="amount" style="color:{{ '#10b981' if balance >= 0 else '#ef4444' }}">
+      {{ '+' if balance >= 0 else '' }}{{ "{:,.0f}".format(balance) }}원
+    </div>
+  </div>
+  <div class="summary-card card">
+    <label>💳 카드 지출</label>
+    <div class="amount">-{{ "{:,.0f}".format(card_expense) }}원</div>
+  </div>
+</div>
+
 <div class="table-card">
   <div class="table-scroll">
   <table>
