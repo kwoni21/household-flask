@@ -239,6 +239,10 @@ def edit_transaction(tx_id):
     cur.execute("SELECT code, name FROM categories ORDER BY code")
     cats = cur.fetchall()
 
+    # 원래 월 파라미터 유지
+    back_year  = request.args.get('year',  request.form.get('back_year',  ''))
+    back_month = request.args.get('month', request.form.get('back_month', ''))
+
     if request.method == 'POST':
         tx_date     = request.form.get('date')
         cat_code    = request.form.get('cat_code')
@@ -246,29 +250,36 @@ def edit_transaction(tx_id):
         income      = float(request.form.get('income', '0').replace(',', '') or 0)
         expense     = float(request.form.get('expense', '0').replace(',', '') or 0)
         credit      = 1 if request.form.get('credit') else 0
+        back_year   = request.form.get('back_year', '')
+        back_month  = request.form.get('back_month', '')
 
         if income == 0 and expense == 0:
             cur.execute("SELECT * FROM transactions WHERE id=%s", (tx_id,))
             tx = cur.fetchone()
-            return render_template('edit.html', cats=cats, tx=tx, userid=session['userid'], error="수입 또는 지출 금액을 입력하세요.")
+            return render_template('edit.html', cats=cats, tx=tx, userid=session['userid'],
+                                   error="수입 또는 지출 금액을 입력하세요.",
+                                   back_year=back_year, back_month=back_month)
         if not description:
             cur.execute("SELECT * FROM transactions WHERE id=%s", (tx_id,))
             tx = cur.fetchone()
-            return render_template('edit.html', cats=cats, tx=tx, userid=session['userid'], error="내용을 입력하세요.")
+            return render_template('edit.html', cats=cats, tx=tx, userid=session['userid'],
+                                   error="내용을 입력하세요.",
+                                   back_year=back_year, back_month=back_month)
 
         cur.execute(
             "UPDATE transactions SET date=%s, cat_code=%s, description=%s, income=%s, expense=%s, credit=%s WHERE id=%s",
             (tx_date, cat_code, description, income, expense, credit, tx_id)
         )
         conn.commit(); cur.close(); conn.close()
-        return redirect(url_for('transactions'))
+        return redirect(url_for('transactions', year=back_year, month=back_month))
 
     cur.execute("SELECT * FROM transactions WHERE id=%s", (tx_id,))
     tx = cur.fetchone()
     cur.close(); conn.close()
     if not tx:
         return redirect(url_for('transactions'))
-    return render_template('edit.html', cats=cats, tx=tx, userid=session['userid'], error=None)
+    return render_template('edit.html', cats=cats, tx=tx, userid=session['userid'],
+                           error=None, back_year=back_year, back_month=back_month)
 
 # ── 카테고리 관리 ────────────────────────────────────────────
 @app.route('/categories', methods=['GET', 'POST'])
