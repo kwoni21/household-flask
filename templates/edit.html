@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}거래 수정 - 원♡순 가계부{% endblock %}
+{% block content %}
+<div class="page-title">✏️ 거래 수정</div>
+
+<div class="form-card">
+  {% if error %}
+  <div class="error-msg">{{ error }}</div>
+  {% endif %}
+
+  <form method="POST">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>날짜</label>
+        <input type="date" name="date" value="{{ tx.date }}" required>
+      </div>
+      <div class="form-group">
+        <label>카테고리</label>
+        <select name="cat_code" required>
+          {% for cat in cats %}
+          <option value="{{ cat.code }}" {% if cat.code == tx.cat_code %}selected{% endif %}>
+            {{ cat.code }} | {{ cat.name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>수입 (원)</label>
+        <input class="amount-input" type="text" inputmode="numeric"
+               value="{{ tx.income|int if tx.income else 0 }}"
+               data-target="income_raw" autocomplete="off">
+        <input type="hidden" name="income" id="income_raw"
+               value="{{ tx.income|int if tx.income else 0 }}">
+      </div>
+
+      <div class="form-group">
+        <label>지출 (원)</label>
+        <input class="amount-input" type="text" inputmode="numeric"
+               value="{{ tx.expense|int if tx.expense else 0 }}"
+               data-target="expense_raw" autocomplete="off">
+        <input type="hidden" name="expense" id="expense_raw"
+               value="{{ tx.expense|int if tx.expense else 0 }}">
+      </div>
+
+      <div class="form-group full">
+        <label>내용</label>
+        <input type="text" name="description" value="{{ tx.description }}" required>
+      </div>
+
+      <div class="form-group full">
+        <div class="checkbox-group">
+          <input type="checkbox" name="credit" id="credit" value="1" {% if tx.credit == 1 %}checked{% endif %}>
+          <label for="credit">💳 신용카드 결제</label>
+        </div>
+      </div>
+
+      <div class="form-group full" style="display:flex; gap:10px;">
+        <a href="{{ url_for('transactions') }}"
+           style="flex:1; padding:13px; text-align:center; border:1px solid var(--border); border-radius:8px; text-decoration:none; color:var(--text-sub); font-size:15px;">
+          취소
+        </a>
+        <button type="submit" class="btn btn-primary btn-submit" style="flex:2;">저장</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
