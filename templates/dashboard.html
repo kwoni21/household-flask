@@ -60,10 +60,12 @@
   <table>
     <thead>
       <tr>
-        <th>날짜</th><th>카테고리</th><th>내용</th>
-        <th style="text-align:right">수입</th>
-        <th style="text-align:right">지출</th>
-        <th>결제</th>
+        <th style="width:100px">날짜</th>
+        <th style="width:100px">카테고리</th>
+        <th>내용</th>
+        <th style="text-align:right;width:120px">수입</th>
+        <th style="text-align:right;width:120px">지출</th>
+        <th style="text-align:center;width:90px">결제</th>
       </tr>
     </thead>
     <tbody>
@@ -72,9 +74,9 @@
         <td data-label="날짜">{{ r.date }}</td>
         <td data-label="카테고리">{{ r.category }}</td>
         <td data-label="내용">{{ r.description }}</td>
-        <td data-label="수입" class="text-income">{% if r.income > 0 %}+{{ "{:,.0f}".format(r.income) }}{% endif %}</td>
-        <td data-label="지출" class="text-expense">{% if r.expense > 0 %}-{{ "{:,.0f}".format(r.expense) }}{% endif %}</td>
-        <td data-label="결제"><span class="badge {{ 'badge-card' if r.credit == 1 else 'badge-cash' }}">{{ '💳 카드' if r.credit == 1 else '💵 현금' }}</span></td>
+        <td data-label="수입" class="text-income" style="text-align:right">{% if r.income > 0 %}+{{ "{:,.0f}".format(r.income) }}{% endif %}</td>
+        <td data-label="지출" class="text-expense" style="text-align:right">{% if r.expense > 0 %}-{{ "{:,.0f}".format(r.expense) }}{% endif %}</td>
+        <td data-label="결제" style="text-align:center"><span class="badge {{ 'badge-card' if r.credit == 1 else 'badge-cash' }}">{{ '💳 카드' if r.credit == 1 else '💵 현금' }}</span></td>
       </tr>
       {% else %}
       <tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:32px">이번 달 거래 내역이 없습니다.</td></tr>
