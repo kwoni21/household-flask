@@ -9,6 +9,8 @@
   {% endif %}
 
   <form method="POST">
+    <input type="hidden" name="back_year"  value="{{ back_year }}">
+    <input type="hidden" name="back_month" value="{{ back_month }}">
     <div class="form-grid">
       <div class="form-group">
         <label>날짜</label>
@@ -56,7 +58,7 @@
       </div>
 
       <div class="form-group full" style="display:flex; gap:10px;">
-        <a href="{{ url_for('transactions') }}"
+        <a href="{{ url_for('transactions', year=back_year, month=back_month) }}"
            style="flex:1; padding:13px; text-align:center; border:1px solid var(--border); border-radius:8px; text-decoration:none; color:var(--text-sub); font-size:15px;">
           취소
         </a>

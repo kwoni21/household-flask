@@ -43,7 +43,7 @@
         <td data-label="지출" class="text-expense">{% if r.expense > 0 %}-{{ "{:,.0f}".format(r.expense) }}{% endif %}</td>
         <td data-label="결제"><span class="badge {{ 'badge-card' if r.credit == 1 else 'badge-cash' }}">{{ '💳 카드' if r.credit == 1 else '💵 현금' }}</span></td>
         <td data-label="" style="display:flex; gap:6px; justify-content:flex-end;">
-          <a href="{{ url_for('edit_transaction', tx_id=r.id) }}"
+          <a href="{{ url_for('edit_transaction', tx_id=r.id, year=year, month=month) }}"
              style="padding:4px 10px; border-radius:6px; background:#e0e7ff; color:#3730a3; font-size:12px; text-decoration:none;">수정</a>
           <form class="delete-form" method="POST" action="{{ url_for('delete_transaction', tx_id=r.id) }}" style="margin:0;">
             <button type="submit" class="btn btn-danger">삭제</button>
