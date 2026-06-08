@@ -186,9 +186,17 @@ def transactions():
     years = [r['y'] for r in cur.fetchall()] or [now.year]
     cur.close(); conn.close()
 
+    # 합계 계산
+    total_income  = sum(r['income']  for r in rows)
+    total_expense = sum(r['expense'] for r in rows if r['credit'] == 0)
+    card_expense  = sum(r['expense'] for r in rows if r['credit'] == 1)
+    balance       = total_income - total_expense
+
     return render_template('transactions.html',
         userid=session['userid'], rows=rows, year=year, month=month, years=years,
-        search=search, type_f=type_f, pay_f=pay_f
+        search=search, type_f=type_f, pay_f=pay_f,
+        total_income=total_income, total_expense=total_expense,
+        card_expense=card_expense, balance=balance
     )
 
 # ── 거래 추가 ────────────────────────────────────────────────
