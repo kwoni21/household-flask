@@ -142,9 +142,11 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .btn-login:hover { background: var(--primary-dark); }
 
 /* ── 차트 영역 ── */
-.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-.chart-card { background: var(--surface); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
-.chart-card h3 { font-size: 14px; color: var(--text-sub); margin-bottom: 16px; }
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.chart-card { background: var(--surface); border-radius: var(--radius); padding: 16px 20px; box-shadow: var(--shadow); }
+.chart-card h3 { font-size: 13px; font-weight: 600; color: var(--text-sub); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.4px; }
+.chart-wrap { position: relative; height: 220px; }
+.chart-wrap canvas { max-height: 220px; }
 
 /* ── 반응형 ── */
 @media (max-width: 900px) {
