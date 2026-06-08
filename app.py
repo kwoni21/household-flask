@@ -88,8 +88,8 @@ def logout():
 @login_required
 def dashboard():
     now   = datetime.now()
-    year  = int(request.args.get('year',  now.year))
-    month = int(request.args.get('month', now.month))
+    year  = int(request.args.get('year',  None) or now.year)
+    month = int(request.args.get('month', None) or now.month)
 
     conn = get_conn(); cur = conn.cursor()
 
@@ -154,8 +154,8 @@ def dashboard():
 @login_required
 def transactions():
     now   = datetime.now()
-    year  = int(request.args.get('year',  now.year))
-    month = int(request.args.get('month', now.month))
+    year  = int(request.args.get('year',  None) or now.year)
+    month = int(request.args.get('month', None) or now.month)
     search = request.args.get('search', '')
     type_f = request.args.get('type_f', '전체')
     pay_f  = request.args.get('pay_f',  '전체')
