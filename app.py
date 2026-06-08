@@ -271,13 +271,22 @@ def edit_transaction(tx_id):
             (tx_date, cat_code, description, income, expense, credit, tx_id)
         )
         conn.commit(); cur.close(); conn.close()
-        return redirect(url_for('transactions', year=back_year, month=back_month))
+        # back_year/month 없으면 수정한 날짜 기준으로 돌아감
+        now = datetime.now()
+        ret_year  = back_year  or str(now.year)
+        ret_month = back_month or str(now.month)
+        return redirect(url_for('transactions', year=ret_year, month=ret_month))
 
     cur.execute("SELECT * FROM transactions WHERE id=%s", (tx_id,))
     tx = cur.fetchone()
     cur.close(); conn.close()
     if not tx:
         return redirect(url_for('transactions'))
+    # back_year/month 없으면 해당 거래의 날짜 기준으로 설정
+    if not back_year or not back_month:
+        tx_dt      = tx['date']
+        back_year  = str(tx_dt.year)  if hasattr(tx_dt, 'year')  else str(tx_dt)[:4]
+        back_month = str(tx_dt.month) if hasattr(tx_dt, 'month') else str(int(str(tx_dt)[5:7]))
     return render_template('edit.html', cats=cats, tx=tx, userid=session['userid'],
                            error=None, back_year=back_year, back_month=back_month)
 
