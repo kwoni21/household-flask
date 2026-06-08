@@ -94,6 +94,11 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
 .table-card td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
 .table-card tr:last-child td { border-bottom: none; }
 .table-card tr:hover td { background: #f8fafc; }
+.table-card td.text-income  { text-align: right; }
+.table-card td.text-expense { text-align: right; }
+.table-card td.td-pay       { text-align: center; }
+.table-card th.th-amount    { text-align: right; }
+.table-card th.th-pay       { text-align: center; }
 .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 12px; }
 .badge-income  { background: #d1fae5; color: #065f46; }
 .badge-expense { background: #fee2e2; color: #991b1b; }
@@ -178,73 +183,79 @@ body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg); color: va
   .table-card th, .table-card td { padding: 10px 12px; font-size: 13px; }
 }
 
-/* ── 모바일 카드형 거래 내역 ── */
+/* ── 모바일 (768px 이하) ── */
 @media (max-width: 768px) {
-  .main { margin-left: 0; padding: 12px; padding-bottom: 80px; }
-
-  /* 하단 네비게이션 바 */
+  /* 하단 네비 */
   .sidebar {
     width: 100%; height: 60px; flex-direction: row;
     position: fixed; bottom: 0; top: auto; left: 0;
     padding: 0; z-index: 100; border-top: 1px solid #334155;
   }
   .sidebar-logo { display: none; }
-  .sidebar nav {
-    display: flex; flex-direction: row;
-    width: 100%; padding: 0;
-  }
+  .sidebar nav { display: flex; flex-direction: row; width: 100%; padding: 0; }
   .sidebar nav a {
     flex: 1; flex-direction: column; justify-content: center;
     padding: 8px 4px; font-size: 10px; text-align: center;
-    border-left: none; border-top: 3px solid transparent;
-    gap: 2px;
+    border-left: none; border-top: 3px solid transparent; gap: 2px;
   }
   .sidebar nav a span { display: block; font-size: 10px; }
   .sidebar nav a.active { border-top-color: var(--primary); border-left: none; }
   .sidebar-footer { display: none; }
 
-  /* 요약 카드 2열 */
-  .summary-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .summary-card { padding: 12px 14px; }
-  .summary-card .amount { font-size: 16px; }
+  /* 메인 레이아웃 */
+  .main { margin-left: 0 !important; padding: 12px; padding-bottom: 76px; }
+  .page-title { font-size: 16px; margin-bottom: 12px; }
 
-  /* 차트 1열 */
-  .charts-grid { grid-template-columns: 1fr; }
+  /* 필터 바 */
+  .filter-bar { flex-wrap: wrap; gap: 8px; padding: 12px; }
+  .filter-bar form { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
+  .filter-bar select, .filter-bar input[type=text] { flex: 1; min-width: 80px; font-size: 13px; }
+  .filter-bar .btn { width: 100%; }
 
-  /* 필터 바 세로 정렬 */
-  .filter-bar { flex-direction: column; align-items: stretch; gap: 8px; }
-  .filter-bar form { flex-wrap: wrap; gap: 8px; }
-  .filter-bar select, .filter-bar input[type=text] { flex: 1; min-width: 100px; }
+  /* 요약 카드 - 1열로 */
+  .summary-grid { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+  .summary-card { padding: 12px; }
+  .summary-card label { font-size: 11px; }
+  .summary-card .amount { font-size: 15px; }
+
+  /* 차트 */
+  .charts-grid { grid-template-columns: 1fr; gap: 12px; margin-bottom: 16px; }
+  .chart-wrap { height: 200px; }
+  .chart-wrap canvas { max-height: 200px !important; }
+  .chart-card { padding: 12px; }
+  .chart-card h3 { font-size: 12px; margin-bottom: 8px; }
 
   /* 테이블 → 카드 변환 */
+  .table-card .table-scroll { overflow-x: visible; }
   .table-card table, .table-card thead, .table-card tbody,
-  .table-card th, .table-card td, .table-card tr { display: block; }
-  .table-card thead { display: none; }
+  .table-card th, .table-card td, .table-card tr { display: block !important; }
+  .table-card thead { display: none !important; }
   .table-card tr {
     background: var(--surface); border-radius: 10px;
-    margin-bottom: 10px; padding: 14px;
+    margin-bottom: 10px; padding: 12px 14px;
     box-shadow: 0 1px 6px rgba(0,0,0,0.07);
     border-left: 4px solid var(--border);
+    min-width: unset !important;
   }
+  .table-card table { min-width: unset !important; }
   .table-card tr:hover td { background: transparent; }
   .table-card td {
-    padding: 3px 0; border: none; font-size: 13px;
-    display: flex; justify-content: space-between; align-items: center;
+    padding: 4px 0 !important; border: none !important;
+    font-size: 13px; display: flex !important;
+    justify-content: space-between; align-items: center;
+    white-space: normal !important;
   }
   .table-card td::before {
     content: attr(data-label);
-    font-size: 11px; color: var(--text-sub); font-weight: 500;
-    min-width: 60px;
+    font-size: 11px; color: var(--text-sub); font-weight: 600;
+    min-width: 55px; flex-shrink: 0;
   }
-  /* 수입/지출 행 강조 */
-  .table-card tr:has(.text-income) { border-left-color: var(--income); }
-  .table-card tr:has(.text-expense) { border-left-color: var(--expense); }
+  /* 값 없는 td 숨기기 */
+  .table-card td:empty { display: none !important; }
 
-  /* 폼 1열 */
+  /* 폼 */
   .form-card { padding: 16px; }
-  .form-grid { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; gap: 14px; }
   .form-group.full { grid-column: 1; }
-
-  /* 페이지 제목 */
-  .page-title { font-size: 18px; margin-bottom: 16px; }
 }
+
